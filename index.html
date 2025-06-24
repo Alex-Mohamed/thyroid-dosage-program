@@ -1,0 +1,109 @@
+<html lang="en">
+<head>
+    <script>
+        function calculate() {
+            var dosages = [25, 50, 75, 88, 100, 112, 125, 137, 150, 175, 200, 300];
+            var too_little = parseInt(document.getElementById("too_little_dropdown").value, 10);
+            var too_much = parseInt(document.getElementById("too_much_dropdown").value, 10);
+            var goal_per_week = Math.round((too_little * 7) + (too_much * 7)) / 2;
+            var arr = new Array(12 * 7); // array in the form: [total_dosage_per_week, dosage, num_days_per_week]
+
+            //if (too_little >= too_more) { // if too little is more than too much
+            //    alert("Too little cannot be more than too much.");
+            //    return;
+            //}
+
+            var arr_index = 0;
+            for (var i = 0; i < dosages.length; i++) {
+                for (var j = 5; j <= 8; j += 0.5) {
+                    arr[arr_index] = [dosages[i] * j, dosages[i], j];
+                    arr_index++;
+                }
+            }
+
+            var closest = [-1, -1, -1];
+            for (var i = 0; i < arr.length; i++) {
+                if (closest[0] === -1 || Math.abs(arr[i][0] - goal_per_week) < Math.abs(closest[0] - goal_per_week)) {
+                    closest = [arr[i][0], arr[i][1], arr[i][2]];
+                }
+            }
+            document.getElementById("closest_dosage").innerHTML = "Closest --> Take " + closest[1] + " mcg every " + closest[2] + " days";
+
+            var closest_on_left = [-1, -1, -1];
+            var curr_total = goal_per_week;
+            while (closest_on_left[0] === -1) {
+                curr_total--;
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i][0] === curr_total && curr_total != closest[0]) {
+                        closest_on_left = [curr_total, arr[i][1], arr[i][2]];
+                        break;
+                    }
+                }
+            }
+            document.getElementById("closest_dosage_left").innerHTML = "Closest Erring on Less --> Take " + closest_on_left[1] + " mcg every " + closest_on_left[2] + " days";
+
+            var closest_on_right = [-1, -1, -1];
+            curr_total = goal_per_week;
+            while (closest_on_right[0] === -1) {
+                curr_total++;
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i][0] === curr_total && curr_total != closest[0]) {
+                        closest_on_right = [curr_total, arr[i][1], arr[i][2]];
+                        break;
+                    }
+                }
+            }
+            document.getElementById("closest_dosage_right").innerHTML = "Closest Erring on More --> Take " + closest_on_right[1] + " mcg every " + closest_on_right[2] + " days";
+        }
+    </script>
+</head>
+
+<body style="background-color:beige">
+    <h1>Thyroid Dosage Calculator</h1>
+    <p>
+        Welcome to the thyroid dosage calculator! <br />
+        <u>Step 1</u>: Use the leftmost dropdown to select the dosage that is too little. <br />
+        <u>Step 2</u>: Use the rightmost dropdown to select the dosage that is too much. <br />
+        <b>NOTE: This program currently assumes that the medication is taken once per day!</b>
+    </p>
+
+    <form>
+        <p>Too Little</p>
+        <select id="too_little_dropdown" onchange="calculate()">
+            <option id="opt1", value=25>25 mcg</option>
+            <option id="opt2", value=50>50 mcg</option>
+            <option id="opt3", value=75>75 mcg</option>
+            <option id="opt4", value=88>88 mcg</option>
+            <option id="opt5", value=100>100 mcg</option>
+            <option id="opt6", value=112>112 mcg</option>
+            <option id="opt7", value=125>125 mcg</option>
+            <option id="opt8", value=137>137 mcg</option>
+            <option id="opt9", value=150>150 mcg</option>
+            <option id="opt10", value=175>175 mcg</option>
+            <option id="opt11", value=200>200 mcg</option>
+            <option id="opt12", value=300>300 mcg</option>
+        </select>
+
+        <p><br />Too Much</p>
+        <select id="too_much_dropdown" onchange="calculate()">
+            <option id="opt13", value=25>25 mcg</option>
+            <option id="opt14", value=50>50 mcg</option>
+            <option id="opt15", value=75>75 mcg</option>
+            <option id="opt16", value=88>88 mcg</option>
+            <option id="opt17", value=100>100 mcg</option>
+            <option id="opt18", value=112>112 mcg</option>
+            <option id="opt19", value=125>125 mcg</option>
+            <option id="opt20", value=137>137 mcg</option>
+            <option id="opt21", value=150>150 mcg</option>
+            <option id="opt22", value=175>175 mcg</option>
+            <option id="opt23", value=200>200 mcg</option>
+            <option id="opt24", value=300>300 mcg</option>
+        </select>
+    </form>
+
+    <p id="result_message"><br />These are the top 3 options for you:</p>
+    <p id="closest_dosage"></p>
+    <p id="closest_dosage_left"></p>
+    <p id="closest_dosage_right"></p>
+</body>
+</html>
