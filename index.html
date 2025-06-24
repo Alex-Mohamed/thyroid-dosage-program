@@ -5,57 +5,25 @@
             var dosages = [25, 50, 75, 88, 100, 112, 125, 137, 150, 175, 200, 300];
             var too_little = parseInt(document.getElementById("too_little_dropdown").value, 10);
             var too_much = parseInt(document.getElementById("too_much_dropdown").value, 10);
-            var goal_per_week = Math.round((too_little * 7) + (too_much * 7)) / 2;
-            var arr = new Array(12 * 7); // array in the form: [total_dosage_per_week, dosage, num_days_per_week]
+            var arr = new Array(); // array in the form: [total_dosage_per_week, dosage, num_days_per_week]
 
-            //if (too_little >= too_more) { // if too little is more than too much
-            //    alert("Too little cannot be more than too much.");
-            //    return;
-            //}
-
-            var arr_index = 0;
             for (var i = 0; i < dosages.length; i++) {
                 for (var j = 5; j <= 8; j += 0.5) {
-                    arr[arr_index] = [dosages[i] * j, dosages[i], j];
-                    arr_index++;
+                    if (dosages[i] * j > too_little * 7 && dosages[i] * j < too_much * 7) {
+                        arr.push([dosages[i] * j, dosages[i], j]);
+                    }
                 }
             }
 
-            var closest = [-1, -1, -1];
+            arr.sort((a,b) => a[0] - b[0]);
+            var text = "";
             for (var i = 0; i < arr.length; i++) {
-                if (closest[0] === -1 || Math.abs(arr[i][0] - goal_per_week) < Math.abs(closest[0] - goal_per_week)) {
-                    closest = [arr[i][0], arr[i][1], arr[i][2]];
-                }
+                text += "Take " + arr[i][1] + " mcg " + arr[i][2] + " days a week --> " + arr[i][0] + " mcg <br/>";;
             }
-            document.getElementById("closest_dosage").innerHTML = "Closest --> Take " + closest[1] + " mcg " + closest[2] + " times a week";
-
-            var closest_on_left = [-1, -1, -1];
-            var curr_total = goal_per_week;
-            while (closest_on_left[0] === -1) {
-                curr_total--;
-                for (var i = 0; i < arr.length; i++) {
-                    if (arr[i][0] === curr_total && curr_total != closest[0]) {
-                        closest_on_left = [curr_total, arr[i][1], arr[i][2]];
-                        break;
-                    }
-                }
-            }
-            document.getElementById("closest_dosage_left").innerHTML = "Closest Erring on Less --> Take " + closest_on_left[1] + " mcg " + closest_on_left[2] + " times a week";
-
-            var closest_on_right = [-1, -1, -1];
-            curr_total = goal_per_week;
-            while (closest_on_right[0] === -1) {
-                curr_total++;
-                for (var i = 0; i < arr.length; i++) {
-                    if (arr[i][0] === curr_total && curr_total != closest[0]) {
-                        closest_on_right = [curr_total, arr[i][1], arr[i][2]];
-                        break;
-                    }
-                }
-            }
-            document.getElementById("closest_dosage_right").innerHTML = "Closest Erring on More --> Take " + closest_on_right[1] + " mcg " + closest_on_right[2] + " times a week";
+            document.getElementById("results").innerHTML = text;
         }
     </script>
+
     <style>
         h1 {
             text-align: center;
@@ -71,8 +39,8 @@
     <h1>Thyroid Dosage Calculator</h1>
     <p>
         Welcome to the thyroid dosage calculator! <br />
-        <u>Step 1</u>: Use the leftmost dropdown to select the dosage that is too little. <br />
-        <u>Step 2</u>: Use the rightmost dropdown to select the dosage that is too much. <br />
+        <u>Step 1</u>: Use the top dropdown to select the dosage that is too little. <br />
+        <u>Step 2</u>: Use the bottom dropdown to select the dosage that is too much. <br />
         <b>NOTE: This program currently assumes that the medication is taken once per day!</b>
     </p>
 
@@ -110,9 +78,7 @@
         </select>
     </form>
 
-    <p id="result_message"><br />These are the top 3 options for you:</p>
-    <p id="closest_dosage"></p>
-    <p id="closest_dosage_left"></p>
-    <p id="closest_dosage_right"></p>
+    <p id="result_message"><br />These are the options available:<br /></p>
+    <p id="results"></p>
 </body>
 </html>
