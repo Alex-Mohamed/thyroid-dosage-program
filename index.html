@@ -27,7 +27,7 @@
                     closest = [arr[i][0], arr[i][1], arr[i][2]];
                 }
             }
-            document.getElementById("closest_dosage").innerHTML = "Closest --> Take " + closest[1] + " mcg every " + closest[2] + " days";
+            document.getElementById("closest_dosage").innerHTML = "Closest --> Take " + closest[1] + " mcg " + closest[2] + " times a week";
 
             var closest_on_left = [-1, -1, -1];
             var curr_total = goal_per_week;
@@ -40,7 +40,7 @@
                     }
                 }
             }
-            document.getElementById("closest_dosage_left").innerHTML = "Closest Erring on Less --> Take " + closest_on_left[1] + " mcg every " + closest_on_left[2] + " days";
+            document.getElementById("closest_dosage_left").innerHTML = "Closest Erring on Less --> Take " + closest_on_left[1] + " mcg " + closest_on_left[2] + " times a week";
 
             var closest_on_right = [-1, -1, -1];
             curr_total = goal_per_week;
@@ -53,9 +53,18 @@
                     }
                 }
             }
-            document.getElementById("closest_dosage_right").innerHTML = "Closest Erring on More --> Take " + closest_on_right[1] + " mcg every " + closest_on_right[2] + " days";
+            document.getElementById("closest_dosage_right").innerHTML = "Closest Erring on More --> Take " + closest_on_right[1] + " mcg " + closest_on_right[2] + " times a week";
         }
     </script>
+    <style>
+        h1 {
+            text-align: center;
+            font-size: 40px;
+        }
+        p, select, input {
+            font-size: 20px;
+        }
+    </style>
 </head>
 
 <body style="background-color:beige">
