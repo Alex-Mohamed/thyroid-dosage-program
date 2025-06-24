@@ -21,7 +21,11 @@
             for (var i = 0; i < arr.length; i++) {
                 text += "Take " + arr[i][1] + " mcg " + arr[i][2] + " days a week --> " + arr[i][0] + " mcg <br/>";;
             }
-            document.getElementById("results").innerHTML = text;
+            if (text === "") {
+                document.getElementById("results").innerHTML = "No options found! Please check input.";
+            } else {
+                document.getElementById("results").innerHTML = text;
+            }
             document.getElementById("too_much_reference").innerHTML = "<i>Too Much Weekly Cumulative Dose: " + too_much * 7 + " mcg</i>";
         }
     </script>
