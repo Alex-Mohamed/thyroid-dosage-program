@@ -15,12 +15,14 @@
                 }
             }
 
+            document.getElementById("too_little_reference").innerHTML = "<i>Too Little Weekly Cumulative Dose: " + too_little * 7 + " mcg</i>";
             arr.sort((a,b) => a[0] - b[0]);
             var text = "";
             for (var i = 0; i < arr.length; i++) {
                 text += "Take " + arr[i][1] + " mcg " + arr[i][2] + " days a week --> " + arr[i][0] + " mcg <br/>";;
             }
             document.getElementById("results").innerHTML = text;
+            document.getElementById("too_much_reference").innerHTML = "<i>Too Much Weekly Cumulative Dose: " + too_much * 7 + " mcg</i>";
         }
     </script>
 
@@ -78,7 +80,9 @@
         </select>
     </form>
 
-    <p id="result_message"><br />These are the options available:<br /></p>
+    <p id="result_message"><br />These are the options available:</p>
+    <p id="too_little_reference"></p>
     <p id="results"></p>
+    <p id="too_much_reference"></p>
 </body>
 </html>
