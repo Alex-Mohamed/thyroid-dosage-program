@@ -28,6 +28,51 @@
             }
             document.getElementById("too_much_reference").innerHTML = "<i>Too Much Weekly Cumulative Dose: " + too_much * 7 + " mcg</i>";
         }
+
+        function calculate_with_weight() {
+            var height = parseInt(document.getElementById("height").value, 10);
+            var actual_weight = parseInt(document.getElementById("weight").value, 10); // IN KILOGRAMS!
+            var hadThyroidSurgery = parseInt(document.getElementById("thyroid_surgery").value, 10);
+            var calcChoice = parseInt(document.getElementById("height_or_weight").value, 10);
+            var gender = parseInt(document.getElementById("gender").value, 10);
+            var ideal_weight;
+            var final_result;
+
+
+            if (gender == 0) { // Male
+                ideal_weight = 50;
+            } else { // Female
+                ideal_weight = 45.5;
+            }
+            
+            if (height >= 60) {
+                while (height > 60) {
+                    ideal_weight += 2.3;
+                    height--;
+                }
+            } else {
+                while (height < 60) {
+                    ideal_weight -= 2.3;
+                    height++;
+                }
+            }
+            
+            if (calcChoice == 0) { // Ideal Body Weight
+                if (hadThyroidSurgery == 0) {
+                    final_result = 2 * ideal_weight // Yes
+                } else {
+                    final_result = 1.6 * ideal_weight // No
+                }
+            } else { // Actual Body Weight
+                if (hadThyroidSurgery == 0) {
+                    final_result = 2 * actual_weight // Yes
+                } else {
+                    final_result = 1.6 * actual_weight // No
+                }
+            }
+
+            document.getElementById("calculation").innerHTML = "Your dosage should be <b>" + Math.round(final_result * 10) / 10 + " micrograms per kilogram</b>"
+        }
     </script>
 
     <style>
@@ -88,5 +133,48 @@
     <p id="too_little_reference"></p>
     <p id="results"></p>
     <p id="too_much_reference"></p>
+
+    <br /><hr><br />  <!-- These break statements split the two portions of the program -->
+
+    <p>
+        Welcome to the microgram-kilogram portion of the calculator! <br />
+        <u>Step 1</u>: Input your height in inches. <br />
+        <u>Step 2</u>: Input your weight in kilograms. <br />
+        <u>Step 3</u>: Indicate your gender. <br />
+        <u>Step 4</u>: Indicate if you have recently had thyroid surgery. <br />
+        <u>Step 5</u>: Choose if you want to use your actual or ideal body weight for the calculation.
+    </p>
+
+    <input id="height" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
+    <p>inches</p>
+
+    <input id="weight" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
+    <p>kilograms</p><br/>
+
+    <form>
+        <select id="gender" onchange="calculate_with_weight()">
+            <option id="Male", value=0>Male</option>
+            <option id="Female", value=1>Female</option>
+        </select>
+    </form>
+    <br/>
+
+    <form>
+        <select id="thyroid_surgery" onchange="calculate_with_weight()">
+            <option id="Yes", value=0>I have had thyroid surgery.</option>
+            <option id="No", value=1>I have not had thyroid surgery.</option>
+        </select>
+    </form>
+    <br/>
+
+    <form>
+        <select id="height_or_weight" onchange="calculate_with_weight()">
+            <option id="height_choice", value=0>Ideal Body Weight</option>
+            <option id="weight_choice", value=1>Actual Body Weight</option>
+        </select>
+    </form>
+    <br/>
+
+    <p id="calculation"></p>
 </body>
 </html>
