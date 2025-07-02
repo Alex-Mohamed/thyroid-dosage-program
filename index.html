@@ -30,6 +30,7 @@
         }
 
         function calculate_with_weight() {
+            var dosages = [25, 50, 75, 88, 100, 112, 125, 137, 150, 175, 200, 300];
             var height = parseInt(document.getElementById("height").value, 10);
             var actual_weight = parseInt(document.getElementById("weight").value, 10); // IN KILOGRAMS!
             var hadThyroidSurgery = parseInt(document.getElementById("thyroid_surgery").value, 10);
@@ -71,7 +72,17 @@
                 }
             }
 
-            document.getElementById("calculation").innerHTML = "Your dosage should be <b>" + Math.round(final_result * 10) / 10 + " micrograms per kilogram</b>"
+            document.getElementById("calculation").innerHTML = "Based on calculations, <b>" + Math.round(final_result * 10) / 10 + " mcg per day</b> is needed."
+
+            var smallestDifference = [dosages[0], Math.abs(dosages[0] - final_result)] // (dosage, difference from result)
+            for (var i = 1; i < dosages.length; i++) {
+                if (Math.abs(dosages[i] - final_result) < smallestDifference[1]) {
+                    smallestDifference[0] = dosages[i];
+                    smallestDifference[1] = Math.abs(dosages[i] - final_result) 
+                }
+            }
+
+            document.getElementById("rounding").innerHTML = "Therefore, the dosage that should be provided is <b>" + smallestDifference[0] + " mcg per day</b>."
         }
     </script>
 
@@ -93,6 +104,7 @@
         <u>Step 1</u>: Use the top dropdown to select the dosage that is too little. <br />
         <u>Step 2</u>: Use the bottom dropdown to select the dosage that is too much. <br />
         <b>NOTE: This program currently assumes that the medication is taken once per day!</b>
+        <!-- Add method that allows for non-once-per-day medications to be used! -->
     </p>
 
     <form>
@@ -134,15 +146,15 @@
     <p id="results"></p>
     <p id="too_much_reference"></p>
 
-    <br /><hr><br />  <!-- These break statements split the two portions of the program -->
+    <br /><hr><br />  <!-- Splits the two parts of the program -->
 
     <p>
         Welcome to the microgram-kilogram portion of the calculator! <br />
-        <u>Step 1</u>: Input your height in inches. <br />
-        <u>Step 2</u>: Input your weight in kilograms. <br />
-        <u>Step 3</u>: Indicate your gender. <br />
-        <u>Step 4</u>: Indicate if you have recently had thyroid surgery. <br />
-        <u>Step 5</u>: Choose if you want to use your actual or ideal body weight for the calculation.
+        <u>Step 1</u>: Input the height in inches. <br />
+        <u>Step 2</u>: Input the weight in kilograms. <br /> <!-- Add way to convert a lbs iput to kg! -->
+        <u>Step 3</u>: Indicate the gender. <br />
+        <u>Step 4</u>: Indicate if the patient recently had thyroid surgery. <br />
+        <u>Step 5</u>: Choose if you want to use actual or ideal body weight for the calculation.
     </p>
 
     <input id="height" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
@@ -161,8 +173,8 @@
 
     <form>
         <select id="thyroid_surgery" onchange="calculate_with_weight()">
-            <option id="Yes", value=0>I have had thyroid surgery.</option>
-            <option id="No", value=1>I have not had thyroid surgery.</option>
+            <option id="Yes", value=0>Did have thyroid surgery.</option>
+            <option id="No", value=1>Did not have thyroid surgery.</option>
         </select>
     </form>
     <br/>
@@ -176,5 +188,6 @@
     <br/>
 
     <p id="calculation"></p>
+    <p id="rounding"></p>
 </body>
 </html>
