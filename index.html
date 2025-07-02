@@ -19,7 +19,7 @@
             arr.sort((a,b) => a[0] - b[0]);
             var text = "";
             for (var i = 0; i < arr.length; i++) {
-                text += "Take " + arr[i][1] + " mcg " + arr[i][2] + " days a week --> " + arr[i][0] + " mcg <br/>";;
+                text += "Take " + arr[i][1] + " mcg " + arr[i][2] + " days a week → " + arr[i][0] + " mcg <br/>";;
             }
             if (text === "") {
                 document.getElementById("results").innerHTML = "No options found! Please check input.";
@@ -32,12 +32,16 @@
         function calculate_with_weight() {
             var dosages = [25, 50, 75, 88, 100, 112, 125, 137, 150, 175, 200, 300];
             var height = parseInt(document.getElementById("height").value, 10);
-            var actual_weight = parseInt(document.getElementById("weight").value, 10); // IN KILOGRAMS!
+            var actual_weight = parseInt(document.getElementById("weight").value, 10);
             var hadThyroidSurgery = parseInt(document.getElementById("thyroid_surgery").value, 10);
             var calcChoice = parseInt(document.getElementById("height_or_weight").value, 10);
             var gender = parseInt(document.getElementById("gender").value, 10);
             var ideal_weight;
             var final_result;
+
+            if (document.getElementById("unit_choice").value == 0) { // need to convert weight to kilograms
+                actual_weight *= 0.453;
+            }
 
 
             if (gender == 0) { // Male
@@ -46,12 +50,12 @@
                 ideal_weight = 45.5;
             }
             
-            if (height >= 60) {
+            if (height >= 60) { // height is 5-foot or above
                 while (height > 60) {
                     ideal_weight += 2.3;
                     height--;
                 }
-            } else {
+            } else { // height is below 5-foot
                 while (height < 60) {
                     ideal_weight -= 2.3;
                     height++;
@@ -78,11 +82,20 @@
             for (var i = 1; i < dosages.length; i++) {
                 if (Math.abs(dosages[i] - final_result) < smallestDifference[1]) {
                     smallestDifference[0] = dosages[i];
-                    smallestDifference[1] = Math.abs(dosages[i] - final_result) 
+                    smallestDifference[1] = Math.abs(dosages[i] - final_result);
                 }
             }
 
             document.getElementById("rounding").innerHTML = "Therefore, the dosage that should be provided is <b>" + smallestDifference[0] + " mcg per day</b>."
+        }
+
+        function change_weight_label() {
+            if (document.getElementById('unit_choice').value == 0) { 
+                document.getElementById('weight_label').innerHTML = 'pounds';
+            } else { 
+                document.getElementById('weight_label').innerHTML = 'kilograms';
+            }
+            calculate_with_weight(); // recalculating using current inputted number in new unit
         }
     </script>
 
@@ -94,21 +107,25 @@
         p, select, input {
             font-size: 20px;
         }
+        .inline-element {
+            display: inline-block;
+        }
     </style>
 </head>
 
 <body style="background-color:beige">
     <h1>Thyroid Dosage Calculator</h1>
     <p>
-        Welcome to the thyroid dosage calculator! <br />
-        <u>Step 1</u>: Use the top dropdown to select the dosage that is too little. <br />
-        <u>Step 2</u>: Use the bottom dropdown to select the dosage that is too much. <br />
+        Welcome to the thyroid dosage calculator! <br/>
+        <u>Step 1</u>: Use the top dropdown to select the dosage that is too little. <br/>
+        <u>Step 2</u>: Use the bottom dropdown to select the dosage that is too much. <br/>
         <b>NOTE: This program currently assumes that the medication is taken once per day!</b>
         <!-- Add method that allows for non-once-per-day medications to be used! -->
     </p>
 
     <form>
-        <p>Too Little</p>
+        <div>
+        <p class="inline-element">Too Little → </p>
         <select id="too_little_dropdown" onchange="calculate()">
             <option id="opt1", value=25>25 mcg</option>
             <option id="opt2", value=50>50 mcg</option>
@@ -123,8 +140,9 @@
             <option id="opt11", value=200>200 mcg</option>
             <option id="opt12", value=300>300 mcg</option>
         </select>
+        </div>
 
-        <p><br />Too Much</p>
+        <p class="inline-element">Too Much →</p>
         <select id="too_much_dropdown" onchange="calculate()">
             <option id="opt13", value=25>25 mcg</option>
             <option id="opt14", value=50>50 mcg</option>
@@ -141,27 +159,41 @@
         </select>
     </form>
 
-    <p id="result_message"><br />These are the options available:</p>
+    <p id="result_message"><br/>These are the options available:</p>
     <p id="too_little_reference"></p>
     <p id="results"></p>
     <p id="too_much_reference"></p>
 
-    <br /><hr><br />  <!-- Splits the two parts of the program -->
+    <br/><hr><br/>  <!-- Splits the two parts of the program -->
 
     <p>
-        Welcome to the microgram-kilogram portion of the calculator! <br />
-        <u>Step 1</u>: Input the height in inches. <br />
-        <u>Step 2</u>: Input the weight in kilograms. <br /> <!-- Add way to convert a lbs iput to kg! -->
-        <u>Step 3</u>: Indicate the gender. <br />
-        <u>Step 4</u>: Indicate if the patient recently had thyroid surgery. <br />
-        <u>Step 5</u>: Choose if you want to use actual or ideal body weight for the calculation.
+        Welcome to the microgram-kilogram portion of the calculator! <br/>
+        <u>Step 1</u>: Input the height in inches. <br/>
+        <u>Step 2</u>: Choose if you want to input the weight in lbs or kg. <br/>
+        <u>Step 3</u>: Input the weight in the desired unit. <br/>
+        <u>Step 4</u>: Indicate the gender. <br/>
+        <u>Step 5</u>: Indicate if the patient recently had thyroid surgery. <br/>
+        <u>Step 6</u>: Choose if you want to use actual or ideal body weight for the calculation.
     </p>
 
-    <input id="height" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
-    <p>inches</p>
+    <div>
+        <input id="height" class="inline-element" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
+        <p class="inline-element">inches</p>
+    </div>
+    <br/>
 
-    <input id="weight" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
-    <p>kilograms</p><br/>
+    <form>
+        <select id="unit_choice" onchange="change_weight_label()">
+            <option id="pounds", value=0>Pounds (lbs)</option>
+            <option id="kilograms", value=1>Kilograms (kg)</option>
+        </select>
+    </form>
+
+    <div>
+        <input id="weight" class="inline-element" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
+        <p id="weight_label" class="inline-element">pounds</p>
+    </div>
+    <br/>
 
     <form>
         <select id="gender" onchange="calculate_with_weight()">
