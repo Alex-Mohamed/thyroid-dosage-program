@@ -4,18 +4,20 @@
         function calculate() {
             var dosages = [25, 50, 75, 88, 100, 112, 125, 137, 150, 175, 200, 300];
             var too_little = parseInt(document.getElementById("too_little_dropdown").value, 10);
+            var tl_freq = parseFloat(document.getElementById("too_little_frequency").value, 10);
             var too_much = parseInt(document.getElementById("too_much_dropdown").value, 10);
+            var tm_freq = parseFloat(document.getElementById("too_much_frequency").value, 10);
             var arr = new Array(); // array in the form: [total_dosage_per_week, dosage, num_days_per_week]
 
             for (var i = 0; i < dosages.length; i++) {
                 for (var j = 5; j <= 8; j += 0.5) {
-                    if (dosages[i] * j > too_little * 7 && dosages[i] * j < too_much * 7) {
+                    if (dosages[i] * j > too_little * tl_freq && dosages[i] * j < too_much * tm_freq) {
                         arr.push([dosages[i] * j, dosages[i], j]);
                     }
                 }
             }
 
-            document.getElementById("too_little_reference").innerHTML = "<i>Too Little Weekly Cumulative Dose: " + too_little * 7 + " mcg</i>";
+            document.getElementById("too_little_reference").innerHTML = "<i>Too Little Weekly Cumulative Dose: " + too_little * tl_freq + " mcg</i>";
             arr.sort((a,b) => a[0] - b[0]);
             var text = "";
             for (var i = 0; i < arr.length; i++) {
@@ -26,7 +28,7 @@
             } else {
                 document.getElementById("results").innerHTML = text;
             }
-            document.getElementById("too_much_reference").innerHTML = "<i>Too Much Weekly Cumulative Dose: " + too_much * 7 + " mcg</i>";
+            document.getElementById("too_much_reference").innerHTML = "<i>Too Much Weekly Cumulative Dose: " + too_much * tm_freq + " mcg</i>";
         }
 
         function calculate_with_weight() {
@@ -117,14 +119,13 @@
     <h1>Thyroid Dosage Calculator</h1>
     <p>
         Welcome to the thyroid dosage calculator! <br/>
-        <u>Step 1</u>: Use the top dropdown to select the dosage that is too little. <br/>
-        <u>Step 2</u>: Use the bottom dropdown to select the dosage that is too much. <br/>
-        <b>NOTE: This program currently assumes that the medication is taken once per day!</b>
-        <!-- Add method that allows for non-once-per-day medications to be used! -->
+        <u>Step 1a</u>: Use the top dropdown to select the dosage that is too little. <br/>
+        <u>Step 1b</u>: Use the text box to its right to select how often per week the medication is taken. <br/>
+        <u>Step 2a</u>: Use the bottom dropdown to select the dosage that is too much. <br/>
+        <u>Step 2b</u>: Use the text box to its right to select how often per week the medication is taken.
     </p>
 
     <form>
-        <div>
         <p class="inline-element">Too Little → </p>
         <select id="too_little_dropdown" onchange="calculate()">
             <option id="opt1", value=25>25 mcg</option>
@@ -140,7 +141,9 @@
             <option id="opt11", value=200>200 mcg</option>
             <option id="opt12", value=300>300 mcg</option>
         </select>
-        </div>
+        <p class="inline-element"> taken </p>
+        <input id="too_little_frequency" type="number" step="0.1" min=1 value=1 onchange="calculate()">
+        <p class="inline-element"> times per week</p>
 
         <p class="inline-element">Too Much →</p>
         <select id="too_much_dropdown" onchange="calculate()">
@@ -157,6 +160,9 @@
             <option id="opt23", value=200>200 mcg</option>
             <option id="opt24", value=300>300 mcg</option>
         </select>
+        <p class="inline-element"> taken </p>
+            <input id="too_much_frequency" type="number" step="0.1" min=1 value=1 onchange="calculate()">
+            <p class="inline-element"> times per week</p>
     </form>
 
     <p id="result_message"><br/>These are the options available:</p>
