@@ -1,0 +1,17 @@
+{
+    "name": "thyroid-program",
+    "version": "0.0.1",
+    "description": "",
+    "main": "calculate.js",
+    "type": "module",
+    "scripts": {
+        "test": "mocha"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "chai": "^5.2.1",
+        "jsdom": "^26.1.0",
+        "mocha": "^11.7.1"
+    }
+}
