@@ -1,6 +1,170 @@
 <html lang="en">
 <head>
+    <style>
+        h1 {
+            text-align: center;
+            font-size: 40px;
+        }
+        p, select, input {
+            font-size: 20px;
+        }
+        .inline-element {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body style="background-color:beige">
+    <h1>Thyroid Dosage Calculator</h1>
+    <p>
+        Welcome to the thyroid dosage calculator! <br/>
+        <u>Step 1a</u>: Use the top dropdown to select the dosage that is too little. <br/>
+        <u>Step 1b</u>: Use the text box to its right to select how often per week the medication is taken. <br/>
+        <u>Step 2a</u>: Use the bottom dropdown to select the dosage that is too much. <br/>
+        <u>Step 2b</u>: Use the text box to its right to select how often per week the medication is taken.
+    </p>
+
+    <form>
+        <p class="inline-element">Too Little → </p>
+        <select id="too_little_dropdown" onchange="calculate()">
+            <option id="opt1", value=25>25 mcg</option>
+            <option id="opt2", value=50>50 mcg</option>
+            <option id="opt3", value=75>75 mcg</option>
+            <option id="opt4", value=88>88 mcg</option>
+            <option id="opt5", value=100>100 mcg</option>
+            <option id="opt6", value=112>112 mcg</option>
+            <option id="opt7", value=125>125 mcg</option>
+            <option id="opt8", value=137>137 mcg</option>
+            <option id="opt9", value=150>150 mcg</option>
+            <option id="opt10", value=175>175 mcg</option>
+            <option id="opt11", value=200>200 mcg</option>
+            <option id="opt12", value=300>300 mcg</option>
+        </select>
+        <input id="too_little_frequency" type="number" step="0.1" min=1 value=7 onchange="calculate()">
+        <p class="inline-element"> doses per week</p>
+        <br/>
+
+        <p class="inline-element">Too Much →</p>
+        <select id="too_much_dropdown" onchange="calculate()">
+            <option id="opt13", value=25>25 mcg</option>
+            <option id="opt14", value=50>50 mcg</option>
+            <option id="opt15", value=75>75 mcg</option>
+            <option id="opt16", value=88>88 mcg</option>
+            <option id="opt17", value=100>100 mcg</option>
+            <option id="opt18", value=112>112 mcg</option>
+            <option id="opt19", value=125>125 mcg</option>
+            <option id="opt20", value=137>137 mcg</option>
+            <option id="opt21", value=150>150 mcg</option>
+            <option id="opt22", value=175>175 mcg</option>
+            <option id="opt23", value=200>200 mcg</option>
+            <option id="opt24", value=300>300 mcg</option>
+        </select>
+            <input id="too_much_frequency" type="number" step="0.1" min=1 value=7 onchange="calculate()">
+            <p class="inline-element"> doses per week</p>
+    </form>
+
+    <p id="result_message"><br/>These are the options available:</p>
+    <p id="too_little_reference"></p>
+    <p id="results"></p>
+    <p id="too_much_reference"></p>
+
+    <div>
+        <canvas id="results_chart" width="900" height="400"></canvas>
+    </div>
+
+    <br/><hr><br/>  <!-- Splits the two parts of the program -->
+
+    <p>
+        Welcome to the microgram-kilogram portion of the calculator! <br/>
+        <u>Step 1</u>: Input the height in inches. <br/>
+        <u>Step 2</u>: Choose if you want to input the weight in lbs or kg. <br/>
+        <u>Step 3</u>: Input the weight in the desired unit. <br/>
+        <u>Step 4</u>: Indicate the gender. <br/>
+        <u>Step 5</u>: Indicate if the patient recently had thyroid surgery. <br/>
+        <u>Step 6</u>: Choose if you want to use actual or ideal body weight for the calculation.
+    </p>
+
+    <div>
+        <input id="height" class="inline-element" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
+        <p class="inline-element">inches</p>
+    </div>
+    <br/>
+
+    <form>
+        <select id="unit_choice" onchange="change_weight_label()">
+            <option id="pounds", value=0>Pounds (lbs)</option>
+            <option id="kilograms", value=1>Kilograms (kg)</option>
+        </select>
+    </form>
+
+    <div>
+        <input id="weight" class="inline-element" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
+        <p id="weight_label" class="inline-element">pounds</p>
+    </div>
+    <br/>
+
+    <form>
+        <select id="gender" onchange="calculate_with_weight()">
+            <option id="Male", value=0>Male</option>
+            <option id="Female", value=1>Female</option>
+        </select>
+    </form>
+    <br/>
+
+    <form>
+        <select id="thyroid_surgery" onchange="calculate_with_weight()">
+            <option id="Yes", value=0>Did have thyroid surgery.</option>
+            <option id="No", value=1>Did not have thyroid surgery.</option>
+        </select>
+    </form>
+    <br/>
+
+    <form>
+        <select id="height_or_weight" onchange="calculate_with_weight()">
+            <option id="height_choice", value=0>Ideal Body Weight</option>
+            <option id="weight_choice", value=1>Actual Body Weight</option>
+        </select>
+    </form>
+    <br/>
+
+    <p id="calculation"></p>
+    <p id="rounding"></p>
+
+    <!-- Below is the JavaScript code, including that needed to create the chart -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
     <script>
+        let myChart = new Chart("results_chart", { // creating chart
+            type: "line",
+            data: {
+                labels: [], // x-values
+                datasets: [{
+                    data: [] // y-values
+                }]
+            },
+            options: {
+                legend: {display: false},
+                scales: {
+                    yAxes: [{ticks: {min: 100, max:2400}}],
+                }
+            }
+        });
+
+        function updateChart(data, tl, tm) {
+            myChart.options.scales.yAxes[0].ticks.min = tl - 50; // altering y-axis range based on new data
+            myChart.options.scales.yAxes[0].ticks.max = tm + 50;
+
+            myChart.data.labels = []; // removing old data
+            myChart.data.datasets[0].data = [];
+            for (let i = 0; i < data.length; i++) { // adding new data
+                myChart.data.labels.push(data[i][1] + " mcg " + data[i][2] + " doses per week");
+                myChart.data.datasets[0].data.push(data[i][0]);
+            }
+
+            myChart.update();
+        }
+
         function calculate() {
             var dosages = [25, 50, 75, 88, 100, 112, 125, 137, 150, 175, 200, 300];
             var too_little = parseInt(document.getElementById("too_little_dropdown").value, 10);
@@ -25,8 +189,12 @@
             }
             if (text === "") {
                 document.getElementById("results").innerHTML = "No options found! Please check input.";
+                myChart.data.labels = []; // removes old data from chart (but adds no new data)
+                myChart.data.datasets[0].data = [];
+                myChart.update();
             } else {
                 document.getElementById("results").innerHTML = text;
+                updateChart(arr, too_little * tl_freq, too_much * tm_freq); // updates the chart!
             }
             document.getElementById("too_much_reference").innerHTML = "<i>Too Much Weekly Cumulative Dose: " + too_much * tm_freq + " mcg</i>";
         }
@@ -112,131 +280,5 @@
             return document.getElementById("rounding").innerHTML;
         }
     </script>
-
-    <style>
-        h1 {
-            text-align: center;
-            font-size: 40px;
-        }
-        p, select, input {
-            font-size: 20px;
-        }
-        .inline-element {
-            display: inline-block;
-        }
-    </style>
-</head>
-
-<body style="background-color:beige">
-    <h1>Thyroid Dosage Calculator</h1>
-    <p>
-        Welcome to the thyroid dosage calculator! <br/>
-        <u>Step 1a</u>: Use the top dropdown to select the dosage that is too little. <br/>
-        <u>Step 1b</u>: Use the text box to its right to select how often per week the medication is taken. <br/>
-        <u>Step 2a</u>: Use the bottom dropdown to select the dosage that is too much. <br/>
-        <u>Step 2b</u>: Use the text box to its right to select how often per week the medication is taken.
-    </p>
-
-    <form>
-        <p class="inline-element">Too Little → </p>
-        <select id="too_little_dropdown" onchange="calculate()">
-            <option id="opt1", value=25>25 mcg</option>
-            <option id="opt2", value=50>50 mcg</option>
-            <option id="opt3", value=75>75 mcg</option>
-            <option id="opt4", value=88>88 mcg</option>
-            <option id="opt5", value=100>100 mcg</option>
-            <option id="opt6", value=112>112 mcg</option>
-            <option id="opt7", value=125>125 mcg</option>
-            <option id="opt8", value=137>137 mcg</option>
-            <option id="opt9", value=150>150 mcg</option>
-            <option id="opt10", value=175>175 mcg</option>
-            <option id="opt11", value=200>200 mcg</option>
-            <option id="opt12", value=300>300 mcg</option>
-        </select>
-        <input id="too_little_frequency" type="number" step="0.1" min=1 value=7 onchange="calculate()">
-        <p class="inline-element"> doses per week</p>
-        <br/>
-
-        <p class="inline-element">Too Much →</p>
-        <select id="too_much_dropdown" onchange="calculate()">
-            <option id="opt13", value=25>25 mcg</option>
-            <option id="opt14", value=50>50 mcg</option>
-            <option id="opt15", value=75>75 mcg</option>
-            <option id="opt16", value=88>88 mcg</option>
-            <option id="opt17", value=100>100 mcg</option>
-            <option id="opt18", value=112>112 mcg</option>
-            <option id="opt19", value=125>125 mcg</option>
-            <option id="opt20", value=137>137 mcg</option>
-            <option id="opt21", value=150>150 mcg</option>
-            <option id="opt22", value=175>175 mcg</option>
-            <option id="opt23", value=200>200 mcg</option>
-            <option id="opt24", value=300>300 mcg</option>
-        </select>
-            <input id="too_much_frequency" type="number" step="0.1" min=1 value=7 onchange="calculate()">
-            <p class="inline-element"> doses per week</p>
-    </form>
-
-    <p id="result_message"><br/>These are the options available:</p>
-    <p id="too_little_reference"></p>
-    <p id="results"></p>
-    <p id="too_much_reference"></p>
-
-    <br/><hr><br/>  <!-- Splits the two parts of the program -->
-
-    <p>
-        Welcome to the microgram-kilogram portion of the calculator! <br/>
-        <u>Step 1</u>: Input the height in inches. <br/>
-        <u>Step 2</u>: Choose if you want to input the weight in lbs or kg. <br/>
-        <u>Step 3</u>: Input the weight in the desired unit. <br/>
-        <u>Step 4</u>: Indicate the gender. <br/>
-        <u>Step 5</u>: Indicate if the patient recently had thyroid surgery. <br/>
-        <u>Step 6</u>: Choose if you want to use actual or ideal body weight for the calculation.
-    </p>
-
-    <div>
-        <input id="height" class="inline-element" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
-        <p class="inline-element">inches</p>
-    </div>
-    <br/>
-
-    <form>
-        <select id="unit_choice" onchange="change_weight_label()">
-            <option id="pounds", value=0>Pounds (lbs)</option>
-            <option id="kilograms", value=1>Kilograms (kg)</option>
-        </select>
-    </form>
-
-    <div>
-        <input id="weight" class="inline-element" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
-        <p id="weight_label" class="inline-element">pounds</p>
-    </div>
-    <br/>
-
-    <form>
-        <select id="gender" onchange="calculate_with_weight()">
-            <option id="Male", value=0>Male</option>
-            <option id="Female", value=1>Female</option>
-        </select>
-    </form>
-    <br/>
-
-    <form>
-        <select id="thyroid_surgery" onchange="calculate_with_weight()">
-            <option id="Yes", value=0>Did have thyroid surgery.</option>
-            <option id="No", value=1>Did not have thyroid surgery.</option>
-        </select>
-    </form>
-    <br/>
-
-    <form>
-        <select id="height_or_weight" onchange="calculate_with_weight()">
-            <option id="height_choice", value=0>Ideal Body Weight</option>
-            <option id="weight_choice", value=1>Actual Body Weight</option>
-        </select>
-    </form>
-    <br/>
-
-    <p id="calculation"></p>
-    <p id="rounding"></p>
 </body>
 </html>
