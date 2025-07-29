@@ -11,6 +11,11 @@
         .inline-element {
             display: inline-block;
         }
+        .divider {
+            width: 5px;
+            height: auto;
+            display: inline-block;
+        }
     </style>
 </head>
 
@@ -23,53 +28,56 @@
         <u>Step 2a</u>: Use the bottom dropdown to select the dosage that is too much. <br/>
         <u>Step 2b</u>: Use the text box to its right to select how often per week the medication is taken.
     </p>
-
-    <form>
-        <p class="inline-element">Too Little → </p>
-        <select id="too_little_dropdown" onchange="calculate()">
-            <option id="opt1", value=25>25 mcg</option>
-            <option id="opt2", value=50>50 mcg</option>
-            <option id="opt3", value=75>75 mcg</option>
-            <option id="opt4", value=88>88 mcg</option>
-            <option id="opt5", value=100>100 mcg</option>
-            <option id="opt6", value=112>112 mcg</option>
-            <option id="opt7", value=125>125 mcg</option>
-            <option id="opt8", value=137>137 mcg</option>
-            <option id="opt9", value=150>150 mcg</option>
-            <option id="opt10", value=175>175 mcg</option>
-            <option id="opt11", value=200>200 mcg</option>
-            <option id="opt12", value=300>300 mcg</option>
-        </select>
-        <input id="too_little_frequency" type="number" step="0.1" min=1 value=7 onchange="calculate()">
-        <p class="inline-element"> doses per week</p>
-        <br/>
-
-        <p class="inline-element">Too Much →</p>
-        <select id="too_much_dropdown" onchange="calculate()">
-            <option id="opt13", value=25>25 mcg</option>
-            <option id="opt14", value=50>50 mcg</option>
-            <option id="opt15", value=75>75 mcg</option>
-            <option id="opt16", value=88>88 mcg</option>
-            <option id="opt17", value=100>100 mcg</option>
-            <option id="opt18", value=112>112 mcg</option>
-            <option id="opt19", value=125>125 mcg</option>
-            <option id="opt20", value=137>137 mcg</option>
-            <option id="opt21", value=150>150 mcg</option>
-            <option id="opt22", value=175>175 mcg</option>
-            <option id="opt23", value=200>200 mcg</option>
-            <option id="opt24", value=300>300 mcg</option>
-        </select>
-            <input id="too_much_frequency" type="number" step="0.1" min=1 value=7 onchange="calculate()">
+    <div class="inline-element">
+        <form>
+            <p class="inline-element">Too Little → </p>
+            <select id="too_little_dropdown" onchange="calculate()">
+                <option id="opt1", value=25>25 mcg</option>
+                <option id="opt2", value=50>50 mcg</option>
+                <option id="opt3", value=75>75 mcg</option>
+                <option id="opt4", value=88>88 mcg</option>
+                <option id="opt5", value=100>100 mcg</option>
+                <option id="opt6", value=112>112 mcg</option>
+                <option id="opt7", value=125>125 mcg</option>
+                <option id="opt8", value=137>137 mcg</option>
+                <option id="opt9", value=150>150 mcg</option>
+                <option id="opt10", value=175>175 mcg</option>
+                <option id="opt11", value=200>200 mcg</option>
+                <option id="opt12", value=300>300 mcg</option>
+            </select>
+            <input id="too_little_frequency" type="number" step="0.1" min=1 value=7 onchange="calculate()">
             <p class="inline-element"> doses per week</p>
-    </form>
+            <br/>
 
-    <p id="result_message"><br/>These are the options available:</p>
-    <p id="too_little_reference"></p>
-    <p id="results"></p>
-    <p id="too_much_reference"></p>
+            <p class="inline-element">Too Much →</p>
+            <select id="too_much_dropdown" onchange="calculate()">
+                <option id="opt13", value=25>25 mcg</option>
+                <option id="opt14", value=50>50 mcg</option>
+                <option id="opt15", value=75>75 mcg</option>
+                <option id="opt16", value=88>88 mcg</option>
+                <option id="opt17", value=100>100 mcg</option>
+                <option id="opt18", value=112>112 mcg</option>
+                <option id="opt19", value=125>125 mcg</option>
+                <option id="opt20", value=137>137 mcg</option>
+                <option id="opt21", value=150>150 mcg</option>
+                <option id="opt22", value=175>175 mcg</option>
+                <option id="opt23", value=200>200 mcg</option>
+                <option id="opt24", value=300>300 mcg</option>
+            </select>
+                <input id="too_much_frequency" type="number" step="0.1" min=1 value=7 onchange="calculate()">
+                <p class="inline-element"> doses per week</p>
+        </form>
 
-    <div>
-        <canvas id="results_chart" width="900" height="400"></canvas>
+        <p id="result_message"><br/>These are the options available:</p>
+        <p id="too_little_reference"></p>
+        <p id="results"></p>
+        <p id="too_much_reference"></p>
+    </div>
+
+    <div class="divider"></div> <!-- Adds a space between the results and graph -->
+
+    <div class="inline-element">
+        <canvas id="results_chart" width="800" height="400"></canvas>
     </div>
 
     <br/><hr><br/>  <!-- Splits the two parts of the program -->
@@ -152,8 +160,8 @@
         });
 
         function updateChart(data, tl, tm) {
-            myChart.options.scales.yAxes[0].ticks.min = tl - 50; // altering y-axis range based on new data
-            myChart.options.scales.yAxes[0].ticks.max = tm + 50;
+            myChart.options.scales.yAxes[0].ticks.min = Math.ceil(tl / 10) * 10; // altering y-axis range based on new data
+            myChart.options.scales.yAxes[0].ticks.max = Math.ceil(tm / 10) * 10;
 
             myChart.data.labels = []; // removing old data
             myChart.data.datasets[0].data = [];
