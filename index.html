@@ -160,7 +160,7 @@
         });
 
         function updateChart(data, tl, tm) {
-            myChart.options.scales.yAxes[0].ticks.min = Math.ceil(tl / 10) * 10; // altering y-axis range based on new data
+            myChart.options.scales.yAxes[0].ticks.min = Math.floor(tl / 10) * 10; // altering y-axis range based on new data
             myChart.options.scales.yAxes[0].ticks.max = Math.ceil(tm / 10) * 10;
 
             myChart.data.labels = []; // removing old data
