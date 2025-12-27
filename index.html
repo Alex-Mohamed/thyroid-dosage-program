@@ -179,17 +179,20 @@
             var tl_freq = parseFloat(document.getElementById("too_little_frequency").value, 10);
             var too_much = parseInt(document.getElementById("too_much_dropdown").value, 10);
             var tm_freq = parseFloat(document.getElementById("too_much_frequency").value, 10);
-            var arr = new Array(); // array in the form: [total_dosage_per_week, dosage, num_days_per_week]
+            var arr = new Array(); // array in the form: [avg_daily_dose, dosage, num_days_per_week]
 
             for (var i = 0; i < dosages.length; i++) {
                 for (var j = 5; j <= 8; j += 0.5) {
                     if (dosages[i] * j > too_little * tl_freq && dosages[i] * j < too_much * tm_freq) {
-                        arr.push([dosages[i] * j, dosages[i], j]);
+                        daily_val = (dosages[i] * j) / 7
+                        arr.push([Math.round(daily_val * 10) / 10, dosages[i], j]);
                     }
                 }
             }
 
-            document.getElementById("too_little_reference").innerHTML = "<i>Too Little Weekly Cumulative Dose: " + too_little * tl_freq + " mcg</i>";
+            tl_daily = (too_little * tl_freq) / 7
+            tm_daily = (too_much * tm_freq) / 7
+            document.getElementById("too_little_reference").innerHTML = "<i>Too Little Average Daily Dose: " + Math.round(tl_daily * 10) / 10 + " mcg</i>";
             arr.sort((a,b) => a[0] - b[0]);
             var text = "";
             for (var i = 0; i < arr.length; i++) {
@@ -202,9 +205,9 @@
                 myChart.update();
             } else {
                 document.getElementById("results").innerHTML = text;
-                updateChart(arr, too_little * tl_freq, too_much * tm_freq); // updates the chart!
+                updateChart(arr, tl_daily, tm_daily); // updates the chart!
             }
-            document.getElementById("too_much_reference").innerHTML = "<i>Too Much Weekly Cumulative Dose: " + too_much * tm_freq + " mcg</i>";
+            document.getElementById("too_much_reference").innerHTML = "<i>Too Much Average Daily Dose: " + Math.round(tm_daily * 10) / 10 + " mcg</i>";
         }
 
         function calculate_with_weight() {

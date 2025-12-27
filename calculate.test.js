@@ -38,10 +38,10 @@ describe('tests', () => {
 
         assert.equal(
             get_results(),
-            "Take 137 mcg 5.5 doses per week → 753.5 mcg <br>" + 
-            "Take 112 mcg 7 doses per week → 784 mcg <br>" + 
-            "Take 100 mcg 8 doses per week → 800 mcg <br>" + 
-            "Take 125 mcg 6.5 doses per week → 812.5 mcg <br>"
+            "Take 137 mcg 5.5 doses per week → 107.6 mcg <br>" + 
+            "Take 112 mcg 7 doses per week → 112 mcg <br>" + 
+            "Take 100 mcg 8 doses per week → 114.3 mcg <br>" + 
+            "Take 125 mcg 6.5 doses per week → 116.1 mcg <br>"
         )
     })
 
