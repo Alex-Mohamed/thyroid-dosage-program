@@ -4,7 +4,7 @@ This web application was requested by a local endocrinologist, and should primar
 
 This application should be used when it is determined that one dose across the course of a week is too little for a patient's needs and another is too high.
 
-This program takes both doses and determines all of the possible ways that a dosage can be provided that is between the "too little" and "too high" doses (in terms of the weekly cumulative dose).
+This program takes both doses and determines all of the possible ways that a dosage can be provided that is between the "too little" and "too high" doses (in terms of the average daily dose).
 
 # How to Access the Calculator
 
@@ -16,9 +16,9 @@ This link will always take users to the most recent version of the application. 
 
 Let's say that a doctor determines that a dosage of 125 micrograms taken 7 times a week is too little for a patient, but a dosage of 137 micrograms taken 7 times per week is too high for the patient.
 
-To determine the options in between those two dosages, the doctor should input the two dosages in the sections marked "Too Little" and "Too High," and a list of possible dosages will be provided, ordered by cumulative weekly dose.
+To determine the options in between those two dosages, the doctor should input the two dosages in the sections marked "Too Little" and "Too High," and a list of possible dosages will be provided, ordered by average daily dose. A graph showing each possible dosage will also be provided, which visually indicates the differences between each dosage options.
 
-![alt text](<Screenshot 2025-07-13 at 11.53.51 AM.png>)
+![alt text](<Screenshot 2025-12-27 at 1.21.55 PM.png>)
 
 # Additional Capability
 
