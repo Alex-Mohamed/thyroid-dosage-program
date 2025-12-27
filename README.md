@@ -16,7 +16,7 @@ This link will always take users to the most recent version of the application. 
 
 Let's say that a doctor determines that a dosage of 125 micrograms taken 7 times a week is too little for a patient, but a dosage of 137 micrograms taken 7 times per week is too high for the patient.
 
-To determine the options in between those two dosages, the doctor should input the two dosages in the sections marked "Too Little" and "Too High," and a list of possible dosages will be provided, ordered by average daily dose. A graph showing each possible dosage will also be provided, which visually indicates the differences between each dosage options.
+To determine the options in between those two dosages, the doctor should input the two dosages in the sections marked "Too Little" and "Too High." A list of possible dosages will be provided, ordered by average daily dose. A graph showing each possible dosage will also be provided, which visually indicates the differences between each dosage option.
 
 ![alt text](<Screenshot 2025-12-27 at 1.21.55 PM.png>)
 
