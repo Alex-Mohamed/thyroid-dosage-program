@@ -5,7 +5,11 @@
             text-align: center;
             font-size: 40px;
         }
-        p, select, input {
+        h2 {
+            text-align: center;
+            font-size: 30px;
+        }
+        p, select, input, label {
             font-size: 20px;
         }
         .inline-element {
@@ -20,9 +24,9 @@
 </head>
 
 <body style="background-color:beige">
-    <h1>Thyroid Dosage Calculator</h1>
+    <h1>Thyroid Hormone Dosing and Adjustment Calculator</h1>
+    <h2>Adjustment</h2>
     <p>
-        Welcome to the thyroid dosage calculator! <br/>
         <u>Step 1a</u>: Use the top dropdown to select the dosage that is too little. <br/>
         <u>Step 1b</u>: Use the text box to its right to select how often per week the medication is taken. <br/>
         <u>Step 2a</u>: Use the bottom dropdown to select the dosage that is too much. <br/>
@@ -80,15 +84,16 @@
         <canvas id="results_chart" width="800" height="400"></canvas>
     </div>
 
-    <br/><hr><br/>  <!-- Splits the two parts of the program -->
+    <br/><hr>  <!-- Splits the two parts of the program -->
 
+    <h2>Dosing</h2>
     <p>
-        Welcome to the microgram-kilogram portion of the calculator! <br/>
+        Welcome to the thyroid dosing calculator! <br/>
         <u>Step 1</u>: Input the height in inches. <br/>
         <u>Step 2</u>: Choose if you want to input the weight in lbs or kg. <br/>
         <u>Step 3</u>: Input the weight in the desired unit. <br/>
-        <u>Step 4</u>: Indicate the gender. <br/>
-        <u>Step 5</u>: Indicate if the patient recently had thyroid surgery. <br/>
+        <u>Step 4</u>: Select the gender. <br/>
+        <u>Step 5</u>: Select if the hypothyroidism is surgical or non-surgical. <br/>
         <u>Step 6</u>: Choose if you want to use actual or ideal body weight for the calculation.
     </p>
 
@@ -99,10 +104,10 @@
     <br/>
 
     <form>
-        <select id="unit_choice" onchange="change_weight_label()">
-            <option id="pounds", value=0>Pounds (lbs)</option>
-            <option id="kilograms", value=1>Kilograms (kg)</option>
-        </select>
+        <input type="radio" id="pounds" name="unit_choice" value=0 onchange="change_weight_label()">
+        <label for="pounds">Pounds (lbs)</label><br/>
+        <input type="radio" id="kilograms" name="unit_choice" value=1 onchange="change_weight_label()">
+        <label for="kilograms">Kilograms (kg)</label><br/>
     </form>
 
     <div>
@@ -112,26 +117,26 @@
     <br/>
 
     <form>
-        <select id="gender" onchange="calculate_with_weight()">
-            <option id="Male", value=0>Male</option>
-            <option id="Female", value=1>Female</option>
-        </select>
+        <input type="radio" id="Male" name="gender" value=0 onchange="calculate_with_weight()">
+        <label for="Male">Male</label><br/>
+        <input type="radio" id="Female" name="gender" value=1 onchange="calculate_with_weight()">
+        <label for="Female">Female</label><br/>
     </form>
     <br/>
 
     <form>
-        <select id="thyroid_surgery" onchange="calculate_with_weight()">
-            <option id="Yes", value=0>Did have thyroid surgery.</option>
-            <option id="No", value=1>Did not have thyroid surgery.</option>
-        </select>
+        <input type="radio" id="Yes" name="surgical" value=0 onchange="calculate_with_weight()">
+        <label for="Yes">Surgical</label><br/>
+        <input type="radio" id="No" name="surgical" value=1 onchange="calculate_with_weight()">
+        <label for="No">Non-Surgical</label><br/>
     </form>
     <br/>
 
     <form>
-        <select id="height_or_weight" onchange="calculate_with_weight()">
-            <option id="height_choice", value=0>Ideal Body Weight</option>
-            <option id="weight_choice", value=1>Actual Body Weight</option>
-        </select>
+        <input type="radio" id="height_choice" name="height_or_weight" value=0 onchange="calculate_with_weight()">
+        <label for="height_choice">Ideal Body Weight</label><br/>
+        <input type="radio" id="weight_choice" name="height_or_weight" value=1 onchange="calculate_with_weight()">
+        <label for="weight_choice">Actual Body Weight</label><br/>
     </form>
     <br/>
 
@@ -214,13 +219,38 @@
             var dosages = [25, 50, 75, 88, 100, 112, 125, 137, 150, 175, 200, 300];
             var height = parseInt(document.getElementById("height").value, 10);
             var actual_weight = parseInt(document.getElementById("weight").value, 10);
-            var hadThyroidSurgery = parseInt(document.getElementById("thyroid_surgery").value, 10);
-            var calcChoice = parseInt(document.getElementById("height_or_weight").value, 10);
-            var gender = parseInt(document.getElementById("gender").value, 10);
+            var unit_choice = -1;
+            var gender = -1;
+            var calcChoice = -1;
+            var surgical = -1;
             var ideal_weight;
             var final_result;
 
-            if (document.getElementById("unit_choice").value == 0) { // need to convert weight to kilograms
+            document.getElementsByName("unit_choice").forEach(button => {
+                if (button.checked) {
+                    unit_choice = button.value;
+                }
+            });
+
+            document.getElementsByName("gender").forEach(button => {
+                if (button.checked) {
+                    gender = button.value;
+                }
+            });
+
+            document.getElementsByName("height_or_weight").forEach(button => {
+                if (button.checked) {
+                    calcChoice = button.value;
+                }
+            });
+
+            document.getElementsByName("surgical").forEach(button => {
+                if (button.checked) {
+                    surgical = button.value;
+                }
+            });
+
+            if (unit_choice == 0) { // need to convert weight to kilograms
                 actual_weight *= 0.453;
             }
 
@@ -244,13 +274,13 @@
             }
                     
             if (calcChoice == 0) { // Ideal Body Weight
-                if (hadThyroidSurgery == 0) {
+                if (surgical == 0) {
                     final_result = 2 * ideal_weight // Yes
                 } else {
                     final_result = 1.6 * ideal_weight // No
                 }
             } else { // Actual Body Weight
-                if (hadThyroidSurgery == 0) {
+                if (surgical == 0) {
                     final_result = 2 * actual_weight // Yes
                 } else {
                     final_result = 1.6 * actual_weight // No
@@ -271,10 +301,17 @@
         }
 
         function change_weight_label() {
-            if (document.getElementById('unit_choice').value == 0) { 
-                document.getElementById('weight_label').innerHTML = 'pounds';
+            var unit_choice = -1;
+            document.getElementsByName("unit_choice").forEach(button => {
+                if (button.checked) {
+                    unit_choice = button.value;
+                }
+            });
+
+            if (unit_choice == 0) { 
+                document.getElementById("weight_label").innerHTML = "pounds";
             } else { 
-                document.getElementById('weight_label').innerHTML = 'kilograms';
+                document.getElementById("weight_label").innerHTML = "kilograms";
             }
             calculate_with_weight(); // recalculating using current inputted number in new unit
         }

@@ -19,11 +19,31 @@ describe('tests', () => {
             <p id="results" innerHTML="Test" />
             <p id="too_much_reference" innerHTML="Test" />
             <input id="height" value=0 />
-            <input id="unit_choice" value=0 />
+            <form>
+                <input type="radio" id="pounds" name="unit_choice" value=0 onchange="change_weight_label()">
+                <label for="pounds">Pounds (lbs)</label><br/>
+                <input type="radio" id="kilograms" name="unit_choice" value=1 onchange="change_weight_label()">
+                <label for="kilograms">Kilograms (kg)</label><br/>
+            </form>
             <input id="weight" value=0 />
-            <input id="gender" value=0 />
-            <input id="thyroid_surgery" value=0 />
-            <input id="height_or_weight" value=0 />
+            <form>
+                <input type="radio" id="Male" name="gender" value=0 onchange="calculate_with_weight()">
+                <label for="Male">Male</label><br/>
+                <input type="radio" id="Female" name="gender" value=1 onchange="calculate_with_weight()">
+                <label for="Female">Female</label><br/>
+            </form>
+            <form>
+                <input type="radio" id="Yes" name="surgical" value=0 onchange="calculate_with_weight()">
+                <label for="Yes">Surgical</label><br/>
+                <input type="radio" id="No" name="surgical" value=1 onchange="calculate_with_weight()">
+                <label for="No">Non-Surgical</label><br/>
+            </form>
+            <form>
+                <input type="radio" id="height_choice" name="height_or_weight" value=0 onchange="calculate_with_weight()">
+                <label for="height_choice">Ideal Body Weight</label><br/>
+                <input type="radio" id="weight_choice" name="height_or_weight" value=1 onchange="calculate_with_weight()">
+                <label for="weight_choice">Actual Body Weight</label><br/>
+            </form>
             <p id="calculation" innerHTML="Test" />
             <p id="rounding" innerHTML="Test" />
         `;
@@ -59,11 +79,11 @@ describe('tests', () => {
 
     it('basic usage, ideal body weight', () => {
         document.getElementById("height").value = 80;
-        document.getElementById("unit_choice").value = 1;
+        document.getElementById("kilograms").checked = true;
         document.getElementById("weight").value = 40;
-        document.getElementById("gender").value = 0;
-        document.getElementById("thyroid_surgery").value = 0;
-        document.getElementById("height_or_weight").value = 0;
+        document.getElementById("Male").checked = true;
+        document.getElementById("Yes").checked = true;
+        document.getElementById("height_choice").checked = true;
         calculate_with_weight();
 
         assert.equal(
@@ -77,11 +97,11 @@ describe('tests', () => {
 
     it('basic usage, actual body weight', () => {
         document.getElementById("height").value = 80;
-        document.getElementById("unit_choice").value = 1;
+        document.getElementById("kilograms").checked = true;
         document.getElementById("weight").value = 40;
-        document.getElementById("gender").value = 0;
-        document.getElementById("thyroid_surgery").value = 0;
-        document.getElementById("height_or_weight").value = 1;
+        document.getElementById("Male").checked = true;
+        document.getElementById("Yes").checked = true;
+        document.getElementById("weight_choice").checked = true;
         calculate_with_weight();
 
         assert.equal(
@@ -95,11 +115,11 @@ describe('tests', () => {
 
     it('testing unit conversion, input provided in lbs', () => {
         document.getElementById("height").value = 80;
-        document.getElementById("unit_choice").value = 0;
+        document.getElementById("pounds").checked = true;
         document.getElementById("weight").value = 180;
-        document.getElementById("gender").value = 0;
-        document.getElementById("thyroid_surgery").value = 0;
-        document.getElementById("height_or_weight").value = 1;
+        document.getElementById("Male").checked = true;
+        document.getElementById("Yes").checked = true;
+        document.getElementById("weight_choice").checked = true;
         calculate_with_weight();
 
         assert.equal(

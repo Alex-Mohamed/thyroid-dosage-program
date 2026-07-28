@@ -24,11 +24,11 @@ To determine the options in between those two dosages, the doctor should input t
 
 This calculator also has the ability to recommend a daily dosage based on a patient's height or weight. The calculator will then determine what dosage should be provided based on typically orderable amount of medication.
 
-Let's say that a doctor has a male patient with a height of 70 inches and a body weight of 155 pounds, and they want to use the patient's ideal body weight for the calculation. In addition, the patient had thyroid surgery, meaning they will likely need more medication.
+Let's say that a doctor has a male patient with a height of 70 inches and a body weight of 155 pounds, and they want to use the patient's ideal body weight for the calculation. In addition, the patient's hypothyroidism is surgical, meaning they will likely need more medication.
 
 They should input these details (while keeping the dropdowns the same), and the result of the calculation will be provided below.
 
-![alt text](<Screenshot 2025-07-13 at 11.59.17 AM.png>)
+![alt text](<Screenshot 2026-07-27 at 9.59.49 PM.png>)
 
 While the exact amount of medication recommended is 146 micrograms per day, the closest amount that is typically orderable is 150 micrograms per day.
 
