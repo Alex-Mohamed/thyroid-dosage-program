@@ -186,17 +186,18 @@
             var tm_freq = parseFloat(document.getElementById("too_much_frequency").value, 10);
             var arr = new Array(); // array in the form: [avg_daily_dose, dosage, num_days_per_week]
 
+            var daily_val;
             for (var i = 0; i < dosages.length; i++) {
                 for (var j = 5; j <= 8; j += 0.5) {
                     if (dosages[i] * j > too_little * tl_freq && dosages[i] * j < too_much * tm_freq) {
-                        daily_val = (dosages[i] * j) / 7
+                        daily_val = (dosages[i] * j) / 7;
                         arr.push([Math.round(daily_val * 10) / 10, dosages[i], j]);
                     }
                 }
             }
 
-            tl_daily = (too_little * tl_freq) / 7
-            tm_daily = (too_much * tm_freq) / 7
+            var tl_daily = (too_little * tl_freq) / 7
+            var tm_daily = (too_much * tm_freq) / 7
             document.getElementById("too_little_reference").innerHTML = "<i>Too Little Average Daily Dose: " + Math.round(tl_daily * 10) / 10 + " mcg</i>";
             arr.sort((a,b) => a[0] - b[0]);
             var text = "";
