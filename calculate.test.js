@@ -13,13 +13,14 @@ describe('tests', () => {
         document.body.innerHTML = `
             <h1>Thyroid Hormone Dosing and Adjustment Calculator</h1>
             <h2>Adjustment</h2>
-            <p>
-                <u>Step 1a</u>: Use the top dropdown to select the dosage that is too little. <br/>
-                <u>Step 1b</u>: Use the text box to its right to select how often per week the medication is taken. <br/>
-                <u>Step 2a</u>: Use the bottom dropdown to select the dosage that is too much. <br/>
-                <u>Step 2b</u>: Use the text box to its right to select how often per week the medication is taken.
-            </p>
             <div class="inline-element">
+                <p>
+                    Welcome to the thyroid adjustment calculator! <br/>
+                    <u>Step 1a</u>: Use the top dropdown to select the dosage that is too little. <br/>
+                    <u>Step 1b</u>: Use the text box to its right to select how often per week the medication is taken. <br/>
+                    <u>Step 2a</u>: Use the bottom dropdown to select the dosage that is too much. <br/>
+                    <u>Step 2b</u>: Use the text box to its right to select how often per week the medication is taken.
+                </p>
                 <form>
                     <p class="inline-element">Too Little → </p>
                     <select id="too_little_dropdown" onchange="calculate()">
@@ -72,7 +73,6 @@ describe('tests', () => {
             </div>
 
             <br/><hr>  <!-- Splits the two parts of the program -->
-
             <h2>Dosing</h2>
             <p>
                 Welcome to the thyroid dosing calculator! <br/>
@@ -81,54 +81,73 @@ describe('tests', () => {
                 <u>Step 3</u>: Input the weight in the desired unit. <br/>
                 <u>Step 4</u>: Select the gender. <br/>
                 <u>Step 5</u>: Select if the hypothyroidism is surgical or non-surgical. <br/>
-                <u>Step 6</u>: Choose if you want to use actual or ideal body weight for the calculation.
+                <u>Step 6</u>: Choose if you want to use actual or ideal body weight for the calculation.<br/><br/>
+                <b>NOTE</b>: Upon changing one input field, the following default values for unchanged input fields
+                will be used in the calculations until those fields are changed:<br/>
+                <ul>
+                    <li>Height: 1 inch</li>
+                    <li>Weight Unit: Pounds</li>
+                    <li>Weight: 1 pound</li>
+                    <li>Gender: Male</li>
+                    <li>Surgical or Non-Surgical: Surgical</li>
+                    <li>Ideal or Actual Body Weight: Ideal Body Weight</li>
+                </ul>
             </p>
-
-            <div>
-                <input id="height" class="inline-element" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
+            <div class="inline-element" style="margin-right: 80px;">
+                <p class="inline-element">Height: </p>
+                <input class="inline-element" id="height" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
                 <p class="inline-element">inches</p>
+                <br/>
+
+                <p class="inline-element">Weight Unit: </p>
+                <form>
+                    <input type="radio" id="pounds" name="unit_choice" value=0 onchange="change_weight_label()">
+                    <label for="pounds">Pounds (lbs)</label><br/>
+                    <input type="radio" id="kilograms" name="unit_choice" value=1 onchange="change_weight_label()">
+                    <label for="kilograms">Kilograms (kg)</label><br/>
+                </form>
+
+                <p class="inline-element">Weight: </p>
+                <input class="inline-element" id="weight" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
+                <p class="inline-element" id="weight_label">pounds</p>
+                <br/>
+
+                <p class="inline-element">Gender: </p>
+                <form>
+                    <input type="radio" id="Male" name="gender" value=0 onchange="calculate_with_weight()">
+                    <label for="Male">Male</label><br/>
+                    <input type="radio" id="Female" name="gender" value=1 onchange="calculate_with_weight()">
+                    <label for="Female">Female</label><br/>
+                </form>
+                <br/>
+
+                <p class="inline-element">Surgical or Non-Surgical: </p>
+                <form>
+                    <input type="radio" id="Yes" name="surgical" value=0 onchange="calculate_with_weight()">
+                    <label for="Yes">Surgical</label><br/>
+                    <input type="radio" id="No" name="surgical" value=1 onchange="calculate_with_weight()">
+                    <label for="No">Non-Surgical</label><br/>
+                </form>
+                <br/>
+
+                <p class="inline-element">Ideal or Actual Body Weight: </p>
+                <form>
+                    <input type="radio" id="height_choice" name="height_or_weight" value=0 onchange="calculate_with_weight()">
+                    <label for="height_choice">Ideal Body Weight</label><br/>
+                    <input type="radio" id="weight_choice" name="height_or_weight" value=1 onchange="calculate_with_weight()">
+                    <label for="weight_choice">Actual Body Weight</label><br/>
+                </form>
+                <br/>
             </div>
-            <br/>
-
-            <form>
-                <input type="radio" id="pounds" name="unit_choice" value=0 onchange="change_weight_label()">
-                <label for="pounds">Pounds (lbs)</label><br/>
-                <input type="radio" id="kilograms" name="unit_choice" value=1 onchange="change_weight_label()">
-                <label for="kilograms">Kilograms (kg)</label><br/>
-            </form>
-
-            <div>
-                <input id="weight" class="inline-element" type="number" min=1 value=1 onchange="calculate_with_weight()"/>
-                <p id="weight_label" class="inline-element">pounds</p>
+            <div class="inline-element" id="dosing-results" style="padding: 10px;">
+                <p id="results_label" style="text-align: center;"></p>
+                <p id="calculation"></p>
+                <p id="rounding"></p>
             </div>
-            <br/>
 
-            <form>
-                <input type="radio" id="Male" name="gender" value=0 onchange="calculate_with_weight()">
-                <label for="Male">Male</label><br/>
-                <input type="radio" id="Female" name="gender" value=1 onchange="calculate_with_weight()">
-                <label for="Female">Female</label><br/>
-            </form>
-            <br/>
-
-            <form>
-                <input type="radio" id="Yes" name="surgical" value=0 onchange="calculate_with_weight()">
-                <label for="Yes">Surgical</label><br/>
-                <input type="radio" id="No" name="surgical" value=1 onchange="calculate_with_weight()">
-                <label for="No">Non-Surgical</label><br/>
-            </form>
-            <br/>
-
-            <form>
-                <input type="radio" id="height_choice" name="height_or_weight" value=0 onchange="calculate_with_weight()">
-                <label for="height_choice">Ideal Body Weight</label><br/>
-                <input type="radio" id="weight_choice" name="height_or_weight" value=1 onchange="calculate_with_weight()">
-                <label for="weight_choice">Actual Body Weight</label><br/>
-            </form>
-            <br/>
-
-            <p id="calculation"></p>
-            <p id="rounding"></p>
+            <p style="text-align: center;">
+                <b>NOTE: This calculator can make mistakes. Make sure to manually review all results provided.</b>
+            </p>
         `;
     });
 
@@ -145,8 +164,8 @@ describe('tests', () => {
             "Take 112 mcg 7 doses per week → 112 mcg <br>" + 
             "Take 100 mcg 8 doses per week → 114.3 mcg <br>" + 
             "Take 125 mcg 6.5 doses per week → 116.1 mcg <br>"
-        )
-    })
+        );
+    });
 
     it('adjustment program, no options available', () => {
         document.getElementById("too_little_dropdown").value = 50;
@@ -157,10 +176,10 @@ describe('tests', () => {
 
         assert.equal(
             get_results(), "No options found! Please check input."
-        )
-    })
+        );
+    });
 
-    it('basic usage for dosing program, ideal body weight', () => {
+    it('dosing program, kilograms + male + surgical + ideal body weight', () => {
         document.getElementById("height").value = 80;
         document.getElementById("kilograms").checked = true;
         document.getElementById("weight").value = 40;
@@ -171,14 +190,14 @@ describe('tests', () => {
 
         assert.equal(
             get_calc(), "Based on calculations, <b>192 mcg per day</b> is needed."
-        )
+        );
 
         assert.equal(
             get_round_ans(), "Therefore, the dosage that should be provided is <b>200 mcg per day</b>."
-        )
-    })
+        );
+    });
 
-    it('basic usage for dosing program, actual body weight', () => {
+    it('dosing program, actual body weight selected', () => {
         document.getElementById("height").value = 80;
         document.getElementById("kilograms").checked = true;
         document.getElementById("weight").value = 40;
@@ -189,14 +208,14 @@ describe('tests', () => {
 
         assert.equal(
             get_calc(), "Based on calculations, <b>80 mcg per day</b> is needed."
-        )
+        );
 
         assert.equal(
             get_round_ans(), "Therefore, the dosage that should be provided is <b>75 mcg per day</b>."
-        )
-    })
+        );
+    });
 
-    it('dosing program, input provided in lbs', () => {
+    it('dosing program, pounds selected', () => {
         document.getElementById("height").value = 80;
         document.getElementById("pounds").checked = true;
         document.getElementById("weight").value = 180;
@@ -207,10 +226,82 @@ describe('tests', () => {
 
         assert.equal(
             get_calc(), "Based on calculations, <b>163.1 mcg per day</b> is needed."
-        )
+        );
 
         assert.equal(
             get_round_ans(), "Therefore, the dosage that should be provided is <b>175 mcg per day</b>."
-        )
-    })
-})
+        );
+    });
+
+    it('dosing program, female gender selected', () => {
+        document.getElementById("height").value = 80;
+        document.getElementById("kilograms").checked = true;
+        document.getElementById("weight").value = 40;
+        document.getElementById("Female").checked = true;
+        document.getElementById("Yes").checked = true;
+        document.getElementById("height_choice").checked = true;
+        calculate_with_weight();
+
+        assert.equal(
+            get_calc(), "Based on calculations, <b>183 mcg per day</b> is needed."
+        );
+
+        assert.equal(
+            get_round_ans(), "Therefore, the dosage that should be provided is <b>175 mcg per day</b>."
+        );
+    });
+
+    it('dosing program, height under 60 inches provided', () => {
+        document.getElementById("height").value = 40;
+        document.getElementById("kilograms").checked = true;
+        document.getElementById("weight").value = 40;
+        document.getElementById("Male").checked = true;
+        document.getElementById("Yes").checked = true;
+        document.getElementById("height_choice").checked = true;
+        calculate_with_weight();
+
+        assert.equal(
+            get_calc(), "Based on calculations, <b>8 mcg per day</b> is needed."
+        );
+
+        assert.equal(
+            get_round_ans(), "Therefore, the dosage that should be provided is <b>25 mcg per day</b>."
+        );
+    });
+
+    it('dosing program, non-surgical selected (ideal body weight)', () => {
+        document.getElementById("height").value = 80;
+        document.getElementById("kilograms").checked = true;
+        document.getElementById("weight").value = 40;
+        document.getElementById("Male").checked = true;
+        document.getElementById("No").checked = true;
+        document.getElementById("height_choice").checked = true;
+        calculate_with_weight();
+
+        assert.equal(
+            get_calc(), "Based on calculations, <b>153.6 mcg per day</b> is needed."
+        );
+
+        assert.equal(
+            get_round_ans(), "Therefore, the dosage that should be provided is <b>150 mcg per day</b>."
+        );
+    });
+
+    it('dosing program, non-surgical selected (actual body weight)', () => {
+        document.getElementById("height").value = 80;
+        document.getElementById("kilograms").checked = true;
+        document.getElementById("weight").value = 40;
+        document.getElementById("Male").checked = true;
+        document.getElementById("No").checked = true;
+        document.getElementById("height_choice").checked = true;
+        calculate_with_weight();
+
+        assert.equal(
+            get_calc(), "Based on calculations, <b>153.6 mcg per day</b> is needed."
+        );
+
+        assert.equal(
+            get_round_ans(), "Therefore, the dosage that should be provided is <b>150 mcg per day</b>."
+        );
+    });
+});

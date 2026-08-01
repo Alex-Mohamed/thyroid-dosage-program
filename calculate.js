@@ -36,10 +36,10 @@ export function calculate_with_weight() {
     var dosages = [25, 50, 75, 88, 100, 112, 125, 137, 150, 175, 200, 300];
     var height = parseInt(document.getElementById("height").value, 10);
     var actual_weight = parseInt(document.getElementById("weight").value, 10);
-    var unit_choice = -1;
-    var gender = -1;
-    var calcChoice = -1;
-    var surgical = -1;
+    var unit_choice = 0;
+    var gender = 0;
+    var calcChoice = 0;
+    var surgical = 0;
     var ideal_weight;
     var final_result;
 
@@ -104,8 +104,8 @@ export function calculate_with_weight() {
         }
     }
 
+    document.getElementById("results_label").innerHTML = "<u><b>Results</b></u>";
     document.getElementById("calculation").innerHTML = "Based on calculations, <b>" + Math.round(final_result * 10) / 10 + " mcg per day</b> is needed."
-
     var smallestDifference = [dosages[0], Math.abs(dosages[0] - final_result)] // (dosage, difference from result)
     for (var i = 1; i < dosages.length; i++) {
         if (Math.abs(dosages[i] - final_result) < smallestDifference[1]) {
@@ -113,8 +113,9 @@ export function calculate_with_weight() {
             smallestDifference[1] = Math.abs(dosages[i] - final_result);
         }
     }
-
     document.getElementById("rounding").innerHTML = "Therefore, the dosage that should be provided is <b>" + smallestDifference[0] + " mcg per day</b>."
+    document.getElementById("dosing-results").style.borderStyle = "dotted";
+    document.getElementById("dosing-results").style.borderWidth = "medium";
 }
 
 function change_weight_label() {
